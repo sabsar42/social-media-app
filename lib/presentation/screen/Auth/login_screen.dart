@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/custom_left_arrow_icon.dart';
 import '../../widgets/primary_button.dart';
@@ -10,11 +13,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _emailTEController = TextEditingController();
-  TextEditingController _passwordTEController = TextEditingController();
+  final TextEditingController _emailTEController = TextEditingController();
+  final TextEditingController _passwordTEController = TextEditingController();
   bool _isPasswordObscured = true;
   bool _checkbox = false;
   bool _isButtonActive = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -25,184 +29,225 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _checkButtonState() {
     setState(() {
-      _isButtonActive =
-          _emailTEController.text.isNotEmpty && _passwordTEController.text.isNotEmpty;
+      _isButtonActive = _emailTEController.text.isNotEmpty &&
+          _passwordTEController.text.isNotEmpty;
+    });
+  }
+
+  void _login() {
+    setState(() {
+      _isLoading = true;
+    });
+    Timer(const Duration(seconds: 5), () {
+      setState(() {
+        _isLoading = false;
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => NewScreen(),
+          ),
+        );
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const CustomLeftArrowIcon(),
-            const SizedBox(
-              height: 150,
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Enter your phone number and password",
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 30,
-                      height: 1.5, // line height
-                      letterSpacing: -0.3,
-                      color: Color(0xFF101828),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  const Text(
-                    'Email',
-                    style: TextStyle(
-                      fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      height: 1.0, // line height
-                      color: Color(0xFF101828),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    style: const TextStyle(
-                      fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                      height: 1.42857,
-                    ),
-                    controller: _emailTEController,
-                    decoration: const InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFF4478FF),
-                          width: 2.0,
-                        ),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.email_outlined,
-                        size: 25,
-                      ),
-                      hintText: 'Input Email',
-                      hintStyle: TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        height: 1.42857,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 8),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  const Text(
-                    'Password',
-                    style: TextStyle(
-                      fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      height: 1.0, // line height
-                      color: Color(0xFF101828),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    style: const TextStyle(
-                      fontFamily: 'Satoshi',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                      height: 1.42857,
-                    ),
-                    controller: _passwordTEController,
-                    obscureText: _isPasswordObscured,
-                    decoration: InputDecoration(
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFF4478FF),
-                          width: 2.0,
-                        ),
-                      ),
-                      prefixIcon: const Icon(
-                        Icons.lock_open_outlined,
-                        size: 25,
-                      ),
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isPasswordObscured = !_isPasswordObscured;
-                          });
-                        },
-                        child: Icon(
-                          _isPasswordObscured
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          size: 25,
-                        ),
-                      ),
-                      hintText: 'Input Password',
-                      hintStyle: const TextStyle(
-                        fontFamily: 'Satoshi',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        height: 1.42857,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                    ),
-                  ),
-                  Row(
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const CustomLeftArrowIcon(),
+                const SizedBox(height: 150,),
+                Container(
+                  padding: const EdgeInsets.only(left: 30, right: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Checkbox(
-                        value: _checkbox,
-                        activeColor: const Color(0xFF4478FF),
-                        onChanged: (value) {
-                          setState(() {
-                            _checkbox = value!;
-                          });
-                        },
+                      const Text(
+                        "Enter your phone number and password",
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 30,
+                          height: 1.5, // line height
+                          letterSpacing: -0.3,
+                          color: Color(0xFF101828),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 40,
                       ),
                       const Text(
-                        "Save Password",
+                        'Email',
                         style: TextStyle(
-                          fontWeight: FontWeight.w500,
                           fontFamily: 'Satoshi',
-                          color: Color(0xFF475467),
-                          height: 1.3, // Line height
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          height: 1.0, // line height
+                          color: Color(0xFF101828),
                         ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        style: const TextStyle(
+                          fontFamily: 'Satoshi',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18,
+                          height: 1.42857,
+                        ),
+                        controller: _emailTEController,
+                        decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF4478FF),
+                              width: 2.0,
+                            ),
+                          ),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            size: 25,
+                          ),
+                          hintText: 'Input Email',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Satoshi',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            height: 1.42857,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const Text(
+                        'Password',
+                        style: TextStyle(
+                          fontFamily: 'Satoshi',
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          height: 1.0, // line height
+                          color: Color(0xFF101828),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        style: const TextStyle(
+                          fontFamily: 'Satoshi',
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18,
+                          height: 1.42857,
+                        ),
+                        controller: _passwordTEController,
+                        obscureText: _isPasswordObscured,
+                        decoration: InputDecoration(
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF4478FF),
+                              width: 2.0,
+                            ),
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.lock_open_outlined,
+                            size: 25,
+                          ),
+                          suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isPasswordObscured = !_isPasswordObscured;
+                              });
+                            },
+                            child: Icon(
+                              _isPasswordObscured
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              size: 25,
+                            ),
+                          ),
+                          hintText: 'Input Password',
+                          hintStyle: const TextStyle(
+                            fontFamily: 'Satoshi',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            height: 1.42857,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _checkbox,
+                            activeColor: const Color(0xFF4478FF),
+                            onChanged: (value) {
+                              setState(() {
+                                _checkbox = value!;
+                              });
+                            },
+                          ),
+                          const Text(
+                            "Save Password",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Satoshi',
+                              color: Color(0xFF475467),
+                              height: 1.3, // Line height
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      PrimaryButton(
+                        text: 'Log In',
+                        onPressed: _isButtonActive ? _login : null,
+                        bgColor: _isButtonActive
+                            ? const Color(0xFF4478FF)
+                            : const Color(0xFFDAE4FF),
                       )
                     ],
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  PrimaryButton(
-                    text: 'Log In',
-                    onPressed: _isButtonActive
-                        ? () {
-                      // Your login logic here
-                    }
-                        : null,
-                    bgColor: _isButtonActive ? const Color(0xFF4478FF) : const Color(0xFFDAE4FF),
-                  )
-                ],
+                ),
+                const SizedBox(
+                  height: 150,
+                )
+              ],
+            ),
+          ),
+          if (_isLoading)
+            Center(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                child: const CupertinoActivityIndicator(
+                  radius: 60,
+                  color: Color(0xFFE1E1E1),
+                ), // Your loader widget
               ),
-            )
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
 }
 
-
+class NewScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('New Screen'),
+      ),
+      body: Center(
+        child: Text('Welcome to the new screen!'),
+      ),
+    );
+  }
+}
