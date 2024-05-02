@@ -13,6 +13,7 @@ void main() async {
   runApp(const SocialMediaApp());
 }
 
+
 class SocialMediaApp extends StatelessWidget {
   const SocialMediaApp({super.key});
 
