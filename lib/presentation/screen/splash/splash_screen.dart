@@ -4,6 +4,8 @@ import 'package:socialmediaapp/presentation/utils/utils.dart';
 import 'package:socialmediaapp/presentation/widgets/custom_text.dart';
 import 'package:socialmediaapp/presentation/widgets/primary_button.dart';
 
+import '../home/home_screen.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -37,7 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>(HomeScreen())));},
                       child: const CustomText(
                         text: 'Log In',
                         color: primaryColor,
