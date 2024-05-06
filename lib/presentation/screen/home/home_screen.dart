@@ -10,19 +10,18 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Stories Section
-          Container(
+          SizedBox(
             height: 100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 10, // Assuming 10 stories
+              itemCount: 10,
               itemBuilder: (BuildContext context, int index) {
-                return Padding(
+                return const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: CircleAvatar(
                     radius: 30,
-                    // Replace the below image with actual story images
-                    backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                    backgroundImage:
+                        NetworkImage('https://via.placeholder.com/150'),
                   ),
                 );
               },
@@ -31,52 +30,46 @@ class HomeScreen extends StatelessWidget {
           // Newsfeed Section
           Expanded(
             child: ListView.builder(
-              itemCount: 20, // Assuming 20 posts in the newsfeed
+              itemCount: 20,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   padding: EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Post Header
                       Row(
                         children: [
                           CircleAvatar(
                             radius: 20,
-
-                            backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                            backgroundImage:
+                                NetworkImage('https://via.placeholder.com/150'),
                           ),
                           SizedBox(width: 10),
-                          Text('Username $index'), // Replace with actual username
+                          Text('Username $index'),
                         ],
                       ),
                       SizedBox(height: 8),
                       // Post Image
                       Image.network(
-                        'https://via.placeholder.com/400', // Replace with actual post image
+                        'https://via.placeholder.com/400',
                         height: 300,
                         fit: BoxFit.cover,
                       ),
                       SizedBox(height: 8),
-                      // Like, Comment, Share buttons
+
                       Row(
                         children: [
                           IconButton(
                             icon: Icon(Icons.favorite_border),
-                            onPressed: () {
-                              // Handle like button press
-                            },
+                            onPressed: () {},
                           ),
                           IconButton(
                             icon: Icon(Icons.comment),
-                            onPressed: () {
-                              // Handle comment button press
-                            },
+                            onPressed: () {},
                           ),
                           IconButton(
                             icon: Icon(Icons.share),
                             onPressed: () {
-                              // Handle share button press
                             },
                           ),
                         ],
